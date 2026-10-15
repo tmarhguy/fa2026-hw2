@@ -4,3 +4,4 @@ description: Deploys Ollama!
 type: application
 version: 0.1.0
 appVersion: "0.1.0"
+icon: https://ollama.com/public/ollama.png
