@@ -5,6 +5,11 @@ metadata:
   labels:
     app: ollama
 spec:
-  # TODO: we only need to reach this from inside the cluster (the webui pod,
-  # and your own machine via port-forward)
-  # WE DO NOT need to expose it externally, just for this hw
+  type: ClusterIP
+  selector:
+    app: ollama
+  ports:
+    - name: http
+      port: 11434
+      targetPort: 11434
+      protocol: TCP

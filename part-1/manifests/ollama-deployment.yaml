@@ -16,15 +16,25 @@ spec:
     spec:
       containers:
         - name: ollama
-          image: # TODO: use the `ollama/ollama:latest` image
+          image: ollama/ollama:latest
           ports:
-            # TODO: Add ports
-            # Hint: Ollama's API server listens on 11434
+            - name: http
+              containerPort: 11434
+              protocol: TCP
           volumeMounts:
-            # TODO: mount the volume at /root/.ollama
+            - name: ollama-data
+              mountPath: /root/.ollama
           readinessProbe:
-            # TODO: check for the port being alive every 5 seconds
+            tcpSocket:
+              port: 11434
+            periodSeconds: 5
+            failureThreshold: 3
           livenessProbe:
-            # TODO: check for the port being alive every 10 seconds
+            tcpSocket:
+              port: 11434
+            periodSeconds: 10
+            failureThreshold: 3
       volumes:
-        # TODO: You'll need to configure pvc to make this work
+        - name: ollama-data
+          persistentVolumeClaim:
+            claimName: ollama-data

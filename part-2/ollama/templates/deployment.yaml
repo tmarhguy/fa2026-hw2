@@ -17,4 +17,30 @@ spec:
         app.kubernetes.io/name: ollama
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-      # TODO: complete spec for ollama based on Part 1
+      containers:
+        - name: ollama
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          volumeMounts:
+            - name: ollama-data
+              mountPath: /root/.ollama
+          readinessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: http
+            periodSeconds: 10
+            failureThreshold: 3
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: ollama-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-ollama-data

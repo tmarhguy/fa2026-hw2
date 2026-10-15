@@ -6,15 +6,9 @@ metadata:
     app.kubernetes.io/name: ollama
     app.kubernetes.io/instance: {{ .Release.Name }}
   annotations:
-    # TODO: Helm hooks let a chart run one-off work at specific points in a
-    # release's lifecycle, instead of you remembering to `kubectl exec` by
-    # hand like in Part 1. Make this Job run after both a fresh install AND
-    # an upgrade (comma-separated hook names), and tell Helm to delete any
-    # previous run of this Job before creating a new one.
-    # See: https://helm.sh/docs/topics/charts_hooks/
-    "helm.sh/hook":
+    "helm.sh/hook": post-install,post-upgrade
     "helm.sh/hook-weight": "1"
-    "helm.sh/hook-delete-policy":
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   backoffLimit: 6 # we've set this up for you as a reasonable default
   template:
@@ -29,8 +23,7 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           env:
             - name: OLLAMA_HOST
-              # TODO: same Service DNS name you used in webui-deployment.yaml
-              value:
+              value: "http://{{ .Release.Name }}-ollama:{{ .Values.service.port }}"
           command:
             - sh
             - -c
@@ -39,5 +32,4 @@ spec:
                 echo "waiting for ollama server at $OLLAMA_HOST..."
                 sleep 3
               done
-              # TODO: pull .Values.model.name instead of a hardcoded model
-              ollama pull
+              ollama pull {{ .Values.model.name }}

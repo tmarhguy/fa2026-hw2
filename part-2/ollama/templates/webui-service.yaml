@@ -11,5 +11,7 @@ spec:
     app.kubernetes.io/name: ollama-webui
     app.kubernetes.io/instance: {{ .Release.Name }}
   ports:
-    # TODO: same as Part 1 - name the port "http" and pull the port number
-    # from .Values.webui.service.port instead of hardcoding it
+    - name: http
+      port: {{ .Values.webui.service.port }}
+      targetPort: http
+      protocol: TCP

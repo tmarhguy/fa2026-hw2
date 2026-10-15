@@ -2,17 +2,15 @@
 # Staging should be cheap to run and easy to poke at manually.
 
 model:
-  # TODO: keep this small, same model you used in Part 1
-  name:
+  name: qwen2.5:0.5b
 
 resources:
   requests:
     cpu: 250m
     memory: 512Mi
   limits:
-    # TODO: pick limits appropriate for a small, cheap-to-run environment
-    cpu:
-    memory:
+    cpu: "1"
+    memory: 1Gi
 
 persistence:
   size: 2Gi

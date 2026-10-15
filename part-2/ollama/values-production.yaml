@@ -2,18 +2,15 @@
 # Production gets a bigger model and more resources than staging.
 
 model:
-  # TODO: a step up from staging's model
-  name:
+  name: qwen2.5:1.5b
 
 resources:
   requests:
     cpu: 500m
     memory: 1Gi
   limits:
-    # TODO: pick limits appropriate for a production workload - bigger than
-    # staging's
-    cpu:
-    memory:
+    cpu: "2"
+    memory: 4Gi
 
 persistence:
   size: 5Gi
